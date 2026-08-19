@@ -1,57 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Leeds Live Meetup Dashboard</title>
 <style>
-  :root { --primary:#0284c7; --primary-dark:#0369a1; --bg:#f8fafc; --card:#fff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0; --chip-bg:#f1f5f9; --success:#16a34a; --danger:#dc2626; --warn:#d97706; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); padding:24px; color:var(--text); }
-  .app { max-width:760px; margin:0 auto; }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); overflow:hidden; margin-bottom:16px; }
-  .hero { background:linear-gradient(135deg,#0284c7,#0f172a); color:white; padding:24px; text-align:center; }
-  .hero h1 { font-size:1.5rem; font-weight:800; }
-  .hero p { font-size:0.85rem; opacity:0.8; margin-top:6px; }
-  .header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-  .title { font-size:1rem; font-weight:700; }
-  .sub { font-size:0.78rem; color:var(--muted); margin-top:2px; }
-  .dot { display:inline-block; width:8px; height:8px; background:var(--success); border-radius:50%; margin-right:5px; animation:pulse 1.6s infinite; }
-  .dot.warn { background:var(--warn); animation:none; }
-  .dot.syncing { background:var(--primary); }
-  @keyframes pulse { 0%{opacity:1;} 50%{opacity:.4;} 100%{opacity:1;} }
-  .status { font-size:0.78rem; color:var(--success); font-weight:600; }
-  .status.warn { color:var(--warn); }
-  button { cursor:pointer; border:none; border-radius:8px; font-size:0.85rem; font-weight:600; padding:10px 16px; }
-  .btn-primary { background:var(--primary); color:white; }
-  .btn-primary:hover { background:var(--primary-dark); }
-  .btn-secondary { background:var(--chip-bg); color:var(--text); }
-  .btn-secondary:hover { background:#e2e8f0; }
-  .btn-secondary:disabled { opacity:0.5; cursor:not-allowed; }
-  .mini { font-size:0.75rem; padding:6px 10px; }
-  .header-actions { display:flex; gap:8px; flex-wrap:wrap; }
-  .toolbar { padding:14px 20px; display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--border); }
-  .chip { padding:6px 12px; border-radius:9999px; background:var(--chip-bg); font-size:0.8rem; font-weight:600; cursor:pointer; border:1px solid transparent; color:var(--muted); }
-  .chip.active { background:#e0f2fe; color:var(--primary-dark); border-color:var(--primary); }
-  .events-list { list-style:none; padding:8px 20px; max-height:520px; overflow-y:auto; }
-  .event-card { padding:14px 0; border-bottom:1px solid var(--border); }
-  .event-card:last-child { border-bottom:none; }
-  .event-top { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
-  .event-title { font-size:1rem; font-weight:600; color:var(--text); text-decoration:none; }
-  .event-title:hover { color:var(--primary); }
-  .event-desc { font-size:0.85rem; color:var(--muted); margin-bottom:8px; line-height:1.4; }
-  .event-footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
-  .meta { font-size:0.78rem; color:var(--muted); display:flex; gap:12px; flex-wrap:wrap; }
-  .badge { font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:9999px; background:#ede9fe; color:#6d28d9; white-space:nowrap; }
-  .footer { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-top:1px solid var(--border); background:#fafbfc; flex-wrap:wrap; gap:8px; }
-  .last-sync { font-size:0.75rem; color:var(--muted); }
-  .empty, .error { text-align:center; padding:40px 20px; color:var(--muted); font-size:0.9rem; }
-  .error { color:var(--danger); }
-  .warning-banner { background:#fef3c7; color:#92400e; font-size:0.78rem; padding:10px 20px; border-bottom:1px solid var(--border); }
-  .spin { animation:spin 1s linear infinite; display:inline-block; }
-  @keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-  .toast { position:fixed; bottom:24px; right:24px; background:#0f172a; color:white; padding:12px 18px; border-radius:8px; font-size:0.85rem; font-weight:600; box-shadow:0 4px 10px rgba(0,0,0,0.2); opacity:0; transform:translateY(10px); transition:all .25s ease; pointer-events:none; z-index:999; }
-  .toast.show { opacity:1; transform:translateY(0); }
+:root{--primary:#0284c7;--primary-dark:#0369a1;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--chip-bg:#f1f5f9;--success:#16a34a;--danger:#dc2626;--warn:#d97706}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);padding:24px;color:var(--text)}
+.app{max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);overflow:hidden;margin-bottom:16px}
+.hero{background:linear-gradient(135deg,#0284c7,#0f172a);color:#fff;padding:24px;text-align:center}
+.hero h1{font-size:1.5rem;font-weight:800}
+.hero p{font-size:.85rem;opacity:.8;margin-top:6px}
+.header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.title{font-size:1rem;font-weight:700}
+.sub{font-size:.78rem;color:var(--muted);margin-top:2px}
+.dot{display:inline-block;width:8px;height:8px;background:var(--success);border-radius:50%;margin-right:5px;animation:pulse 1.6s infinite}
+.dot.warn{background:var(--warn);animation:none}.dot.syncing{background:var(--primary)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.status{font-size:.78rem;color:var(--success);font-weight:600}.status.warn{color:var(--warn)}
+button{cursor:pointer;border:none;border-radius:8px;font-size:.85rem;font-weight:600;padding:10px 16px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--chip-bg);color:var(--text)}.btn-secondary:hover{background:#e2e8f0}
+.btn-secondary:disabled{opacity:.5;cursor:not-allowed}.mini{font-size:.75rem;padding:6px 10px}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+.toolbar{padding:14px 20px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.chip{padding:6px 12px;border-radius:9999px;background:var(--chip-bg);font-size:.8rem;font-weight:600;cursor:pointer;border:1px solid transparent;color:var(--muted)}
+.chip.active{background:#e0f2fe;color:var(--primary-dark);border-color:var(--primary)}
+.events-list{list-style:none;padding:8px 20px;max-height:520px;overflow-y:auto}
+.event-card{padding:14px 0;border-bottom:1px solid var(--border)}.event-card:last-child{border-bottom:none}
+.event-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.event-title{font-size:1rem;font-weight:600;color:var(--text);text-decoration:none}.event-title:hover{color:var(--primary)}
+.event-desc{font-size:.85rem;color:var(--muted);margin-bottom:8px;line-height:1.4}
+.event-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.meta{font-size:.78rem;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.badge{font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:9999px;background:#ede9fe;color:#6d28d9;white-space:nowrap}
+.footer{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-top:1px solid var(--border);background:#fafbfc;flex-wrap:wrap;gap:8px}
+.last-sync{font-size:.75rem;color:var(--muted)}
+.empty,.error{text-align:center;padding:40px 20px;color:var(--muted);font-size:.9rem}.error{color:var(--danger)}
+.warning-banner{background:#fef3c7;color:#92400e;font-size:.78rem;padding:10px 20px;border-bottom:1px solid var(--border)}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:24px;right:24px;background:#0f172a;color:#fff;padding:12px 18px;border-radius:8px;font-size:.85rem;font-weight:600;box-shadow:0 4px 10px rgba(0,0,0,.2);opacity:0;transform:translateY(10px);transition:all .25s ease;pointer-events:none;z-index:999}
+.toast.show{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
@@ -64,157 +56,91 @@
     <div class="header">
       <div>
         <div class="title">Upcoming Events</div>
-        <div class="sub"><span class="dot" id="statusDot"></span><span class="status" id="statusText">Connecting...</span></div>
+        <div class="sub"><span class="dot" id="sd"></span><span class="status" id="st">Connecting...</span></div>
       </div>
       <div class="header-actions">
         <button class="btn-secondary" id="refreshBtn">&#128260; Refresh Now</button>
         <button class="btn-primary" id="syncAllBtn">&#128197; Sync All to Calendar</button>
       </div>
     </div>
-    <div id="warningBanner" style="display:none;" class="warning-banner"></div>
-    <div class="toolbar" id="quickFilters">
-      <span class="chip active" data-filter="all">All Events</span>
-      <span class="chip" data-filter="soon">Next 14 Days</span>
-      <span class="chip" data-filter="month">This Month</span>
+    <div id="wb" style="display:none" class="warning-banner"></div>
+    <div class="toolbar" id="filters">
+      <span class="chip active" data-f="all">All Events</span>
+      <span class="chip" data-f="soon">Next 14 Days</span>
+      <span class="chip" data-f="month">This Month</span>
     </div>
-    <div id="contentArea"><div class="empty">&#9654; Loading live events from Meetup...</div></div>
+    <div id="ca"><div class="empty">&#9654; Loading live events...</div></div>
     <div class="footer">
-      <span class="last-sync" id="lastSync">&mdash;</span>
-      <button class="btn-secondary mini" id="exportCsvBtn">&#11015; Export CSV</button>
+      <span class="last-sync" id="ls">&mdash;</span>
+      <button class="btn-secondary mini" id="csvBtn">&#11015; Export CSV</button>
     </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 <script>
-  const API = window.location.origin;
-  let events = [], filter = "all", syncing = false;
-
-  function toast(msg, err=false) {
-    const t = document.getElementById("toast");
-    t.textContent = msg; t.style.background = err ? "#dc2626" : "#0f172a";
-    t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2800);
-  }
-
-  function withinDays(d, n) {
-    if (!d) return false;
-    return (new Date(d) - Date.now()) / 86400000 <= n && (new Date(d) - Date.now()) / 86400000 >= -0.5;
-  }
-
-  function thisMonth(d) {
-    if (!d) return false;
-    const dt = new Date(d), now = new Date();
-    return dt >= now && dt.getMonth() === now.getMonth() && dt.getFullYear() === now.getFullYear();
-  }
-
-  function filtered() {
-    if (filter === "soon") return events.filter(e => withinDays(e.start, 14));
-    if (filter === "month") return events.filter(e => thisMonth(e.start));
-    return events;
-  }
-
-  function fmt(d) {
-    if (!d) return "Date TBA";
-    return new Date(d).toLocaleString(undefined, { weekday:"short", month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" });
-  }
-
-  function render() {
-    const list = filtered();
-    const c = document.getElementById("contentArea");
-    if (!list.length) { c.innerHTML = '<div class="empty">No events match this filter.</div>'; return; }
-    c.innerHTML = '<ul class="events-list">' + list.map(ev => `
-      <li class="event-card">
-        <div class="event-top">
-          <a href="${ev.url}" target="_blank" class="event-title">${ev.title}</a>
-          <span class="badge">${ev.group}</span>
-        </div>
-        <p class="event-desc">${(ev.desc||"View on Meetup for details.").substring(0,140)}</p>
-        <div class="event-footer">
-          <div class="meta">
-            <span>&#128197; ${fmt(ev.start)}</span>
-            <span>&#128205; ${ev.location}</span>
-          </div>
-          <div style="display:flex;gap:6px;">
-            <button class="btn-secondary mini" onclick='gcal(${JSON.stringify(ev).replace(/'/g,"&apos;")})'>&#128197; Google Cal</button>
-            <button class="btn-secondary mini" onclick='dlics(${JSON.stringify(ev).replace(/'/g,"&apos;")})'>&#11015; .ics</button>
-          </div>
-        </div>
-      </li>`).join("") + "</ul>";
-  }
-
-  function blobDl(content, name, type) {
-    const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([content],{type})), download: name });
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  }
-
-  function ics(ev) {
-    const s = new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";
-    return `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//LeedsSync//EN\nBEGIN:VEVENT\nUID:${ev.id}\nDTSTAMP:${s}\nSUMMARY:${ev.title}\nDESCRIPTION:${(ev.desc||"").replace(/\n/g," ")}\nURL:${ev.url}\nLOCATION:${ev.location||""}\nEND:VEVENT\nEND:VCALENDAR`;
-  }
-
-  function dlics(ev) { blobDl(ics(ev), ev.title.substring(0,30).replace(/[^a-z0-9]/gi,"_")+".ics", "text/calendar"); toast("&#11015; .ics saved"); }
-
-  function gcal(ev) {
-    window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&details=${encodeURIComponent(ev.desc||"")}&location=${encodeURIComponent(ev.location||"")}`, "_blank");
-    toast("&#128197; Opening Google Calendar...");
-  }
-
-  function setStatus(text, mode) {
-    document.getElementById("statusDot").className = "dot" + (mode==="warn" ? " warn" : mode==="syncing" ? " syncing" : "");
-    const s = document.getElementById("statusText"); s.className = "status" + (mode==="warn" ? " warn" : ""); s.textContent = text;
-  }
-
-  function applyData(data) {
-    events = data.events || [];
-    const wb = document.getElementById("warningBanner");
-    if (data.failed_groups && data.failed_groups.length) {
-      wb.style.display = "block"; wb.textContent = `\u26a0 Couldn't reach: ${data.failed_groups.join(", ")}. Showing available groups.`;
-    } else wb.style.display = "none";
-    setStatus(`Live \u2014 ${data.event_count} events synced`, "ok");
-    document.getElementById("lastSync").textContent = "Last synced: " + new Date(data.generated_at).toLocaleString();
-    render();
-  }
-
-  async function doSync(endpoint) {
-    if (syncing) return; syncing = true;
-    const btn = document.getElementById("refreshBtn");
-    btn.disabled = true; btn.innerHTML = '<span class="spin">&#128260;</span> Syncing...';
-    setStatus("Syncing from Meetup...", "syncing");
-    try {
-      const res = await fetch(API + endpoint);
-      if (!res.ok) throw new Error();
-      applyData(await res.json()); toast("\u2705 Events loaded");
-    } catch {
-      setStatus("Sync failed", "warn"); toast("Sync failed — try Refresh", true);
-      document.getElementById("contentArea").innerHTML = '<div class="error">&#9888; Could not load events. Tap Refresh Now to retry.</div>';
-    }
-    btn.disabled = false; btn.innerHTML = "&#128260; Refresh Now"; syncing = false;
-  }
-
-  document.getElementById("quickFilters").addEventListener("click", e => {
-    if (!e.target.classList.contains("chip")) return;
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    e.target.classList.add("active"); filter = e.target.dataset.filter; render();
-  });
-
-  document.getElementById("refreshBtn").addEventListener("click", () => doSync("/api/sync"));
-
-  document.getElementById("syncAllBtn").addEventListener("click", () => {
-    if (!events.length) { toast("No events loaded", true); return; }
-    let cal = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//LeedsSync//EN\n";
-    events.forEach(ev => { cal += `BEGIN:VEVENT\nUID:${ev.id}\nSUMMARY:${ev.title}\nURL:${ev.url}\nLOCATION:${ev.location||""}\nEND:VEVENT\n`; });
-    blobDl(cal+"END:VCALENDAR", "leeds_all_events.ics", "text/calendar");
-    toast(`&#128197; ${events.length} events bundled`);
-  });
-
-  document.getElementById("exportCsvBtn").addEventListener("click", () => {
-    if (!events.length) { toast("No events", true); return; }
-    const rows = [["Title","Date","Group","Location","Link"], ...events.map(e => [e.title, fmt(e.start), e.group, e.location, e.url])];
-    blobDl(rows.map(r => r.map(v => `"${(v||"").toString().replace(/"/g,'""')}"`).join(",")).join("\n"), "leeds_events.csv", "text/csv");
-    toast("&#11015; CSV exported");
-  });
-
-  setInterval(() => doSync("/api/sync"), 5 * 60 * 1000);
-  doSync("/api/events");
+const API=window.location.origin;
+let evs=[],fil="all",busy=false;
+function toast(m,e=false){const t=document.getElementById("toast");t.textContent=m;t.style.background=e?"#dc2626":"#0f172a";t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2800)}
+function inDays(d,n){if(!d)return false;const x=(new Date(d)-Date.now())/86400000;return x>=-0.5&&x<=n}
+function inMonth(d){if(!d)return false;const dt=new Date(d),now=new Date();return dt>=now&&dt.getMonth()===now.getMonth()&&dt.getFullYear()===now.getFullYear()}
+function getList(){if(fil==="soon")return evs.filter(e=>inDays(e.start,14));if(fil==="month")return evs.filter(e=>inMonth(e.start));return evs}
+function fmt(d){if(!d)return"Date TBA";return new Date(d).toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
+function render(){
+  const list=getList(),c=document.getElementById("ca");
+  if(!list.length){c.innerHTML='<div class="empty">No events match this filter.</div>';return}
+  c.innerHTML='<ul class="events-list">'+list.map(ev=>`<li class="event-card"><div class="event-top"><a href="${ev.url}" target="_blank" class="event-title">${ev.title}</a><span class="badge">${ev.group}</span></div><p class="event-desc">${(ev.desc||"View on Meetup for details.").substring(0,140)}</p><div class="event-footer"><div class="meta"><span>&#128197; ${fmt(ev.start)}</span><span>&#128205; ${ev.location}</span></div><div style="display:flex;gap:6px"><button class="btn-secondary mini" onclick='gcal(${JSON.stringify(ev).replace(/'/g,"&apos;")})'>&#128197; Google Cal</button><button class="btn-secondary mini" onclick='dlics(${JSON.stringify(ev).replace(/'/g,"&apos;")})'>&#11015; .ics</button></div></div></li>`).join("")+"</ul>"
+}
+function blobDl(c,n,t){const a=Object.assign(document.createElement("a"),{href:URL.createObjectURL(new Blob([c],{type:t})),download:n});document.body.appendChild(a);a.click();document.body.removeChild(a)}
+function mkics(ev){const s=new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";return`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//LeedsSync//EN
+BEGIN:VEVENT
+UID:${ev.id}
+DTSTAMP:${s}
+SUMMARY:${ev.title}
+DESCRIPTION:${(ev.desc||"").replace(/
+/g," ")}
+URL:${ev.url}
+LOCATION:${ev.location||""}
+END:VEVENT
+END:VCALENDAR`}
+function dlics(ev){blobDl(mkics(ev),ev.title.substring(0,30).replace(/[^a-z0-9]/gi,"_")+".ics","text/calendar");toast("⬇ .ics saved")}
+function gcal(ev){window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&details=${encodeURIComponent(ev.desc||"")}&location=${encodeURIComponent(ev.location||"")}`, "_blank");toast("&#128197; Opening Google Calendar...")}
+function setStatus(text,mode){document.getElementById("sd").className="dot"+(mode==="warn"?" warn":mode==="syncing"?" syncing":"");const s=document.getElementById("st");s.className="status"+(mode==="warn"?" warn":"");s.textContent=text}
+function applyData(data){
+  evs=data.events||[];
+  const wb=document.getElementById("wb");
+  if(data.failed_groups&&data.failed_groups.length){wb.style.display="block";wb.textContent="⚠ Couldn't reach: "+data.failed_groups.join(", ")+". Showing available groups."}
+  else wb.style.display="none";
+  setStatus("Live — "+data.event_count+" events synced","ok");
+  document.getElementById("ls").textContent="Last synced: "+new Date(data.generated_at).toLocaleString();
+  render()
+}
+async function doSync(ep){
+  if(busy)return;busy=true;
+  const btn=document.getElementById("refreshBtn");
+  btn.disabled=true;btn.innerHTML='<span class="spin">&#128260;</span> Syncing...';
+  setStatus("Syncing from Meetup...","syncing");
+  try{const res=await fetch(API+ep);if(!res.ok)throw new Error();applyData(await res.json());toast("✅ Events loaded")}
+  catch{setStatus("Sync failed","warn");toast("Sync failed — tap Refresh",true);document.getElementById("ca").innerHTML='<div class="error">&#9888; Could not load events. Tap Refresh Now to retry.</div>'}
+  btn.disabled=false;btn.innerHTML="&#128260; Refresh Now";busy=false
+}
+document.getElementById("filters").addEventListener("click",e=>{if(!e.target.classList.contains("chip"))return;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));e.target.classList.add("active");fil=e.target.dataset.f;render()});
+document.getElementById("refreshBtn").addEventListener("click",()=>doSync("/api/sync"));
+document.getElementById("syncAllBtn").addEventListener("click",()=>{if(!evs.length){toast("No events loaded",true);return}let cal="BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//LeedsSync//EN
+";evs.forEach(ev=>{cal+="BEGIN:VEVENT
+UID:"+ev.id+"
+SUMMARY:"+ev.title+"
+URL:"+ev.url+"
+LOCATION:"+(ev.location||"")+"
+END:VEVENT
+"});blobDl(cal+"END:VCALENDAR","leeds_all_events.ics","text/calendar");toast("&#128197; "+evs.length+" events bundled")});
+document.getElementById("csvBtn").addEventListener("click",()=>{if(!evs.length){toast("No events",true);return}const rows=[["Title","Date","Group","Location","Link"],...evs.map(e=>[e.title,fmt(e.start),e.group,e.location,e.url])];blobDl(rows.map(r=>r.map(v=>'"'+(v||"").toString().replace(/"/g,'""')+'"').join(",")).join("
+"),"leeds_events.csv","text/csv");toast("⬇ CSV exported")});
+setInterval(()=>doSync("/api/sync"),5*60*1000);
+doSync("/api/events");
 </script>
 </body>
 </html>
