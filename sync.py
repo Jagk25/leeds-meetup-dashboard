@@ -19,8 +19,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 
 
 def fetch_events():
-    all_events = []
-    failed = []
+    all_events, failed = [], []
     for slug, name in GROUPS:
         url = f"https://www.meetup.com/{slug}/events/ical/"
         try:
@@ -43,7 +42,6 @@ def fetch_events():
                 })
         except Exception:
             failed.append(name)
-
     all_events.sort(key=lambda e: e["start"] or "")
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -55,11 +53,8 @@ def fetch_events():
 
 
 class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self._respond()
-
-    def do_POST(self):
-        self._respond()
+    def do_GET(self): self._respond()
+    def do_POST(self): self._respond()
 
     def do_OPTIONS(self):
         self.send_response(200)

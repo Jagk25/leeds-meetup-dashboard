@@ -13,7 +13,7 @@
   .hero { background:linear-gradient(135deg,#0284c7,#0f172a); color:white; padding:24px; text-align:center; }
   .hero h1 { font-size:1.5rem; font-weight:800; }
   .hero p { font-size:0.85rem; opacity:0.8; margin-top:6px; }
-  .header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
   .title { font-size:1rem; font-weight:700; }
   .sub { font-size:0.78rem; color:var(--muted); margin-top:2px; }
   .dot { display:inline-block; width:8px; height:8px; background:var(--success); border-radius:50%; margin-right:5px; animation:pulse 1.6s infinite; }
@@ -29,14 +29,14 @@
   .btn-secondary:hover { background:#e2e8f0; }
   .btn-secondary:disabled { opacity:0.5; cursor:not-allowed; }
   .mini { font-size:0.75rem; padding:6px 10px; }
-  .header-actions { display:flex; gap:8px; }
+  .header-actions { display:flex; gap:8px; flex-wrap:wrap; }
   .toolbar { padding:14px 20px; display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--border); }
   .chip { padding:6px 12px; border-radius:9999px; background:var(--chip-bg); font-size:0.8rem; font-weight:600; cursor:pointer; border:1px solid transparent; color:var(--muted); }
   .chip.active { background:#e0f2fe; color:var(--primary-dark); border-color:var(--primary); }
   .events-list { list-style:none; padding:8px 20px; max-height:520px; overflow-y:auto; }
   .event-card { padding:14px 0; border-bottom:1px solid var(--border); }
   .event-card:last-child { border-bottom:none; }
-  .event-top { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; }
+  .event-top { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
   .event-title { font-size:1rem; font-weight:600; color:var(--text); text-decoration:none; }
   .event-title:hover { color:var(--primary); }
   .event-desc { font-size:0.85rem; color:var(--muted); margin-bottom:8px; line-height:1.4; }
@@ -97,8 +97,7 @@
 
   function withinDays(d, n) {
     if (!d) return false;
-    const diff = (new Date(d) - Date.now()) / 86400000;
-    return diff >= -0.5 && diff <= n;
+    return (new Date(d) - Date.now()) / 86400000 <= n && (new Date(d) - Date.now()) / 86400000 >= -0.5;
   }
 
   function thisMonth(d) {
@@ -149,19 +148,7 @@
 
   function ics(ev) {
     const s = new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";
-    return `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//LeedsSync//EN
-BEGIN:VEVENT
-UID:${ev.id}
-DTSTAMP:${s}
-SUMMARY:${ev.title}
-DESCRIPTION:${(ev.desc||"").replace(/
-/g," ")}
-URL:${ev.url}
-LOCATION:${ev.location||""}
-END:VEVENT
-END:VCALENDAR`;
+    return `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//LeedsSync//EN\nBEGIN:VEVENT\nUID:${ev.id}\nDTSTAMP:${s}\nSUMMARY:${ev.title}\nDESCRIPTION:${(ev.desc||"").replace(/\n/g," ")}\nURL:${ev.url}\nLOCATION:${ev.location||""}\nEND:VEVENT\nEND:VCALENDAR`;
   }
 
   function dlics(ev) { blobDl(ics(ev), ev.title.substring(0,30).replace(/[^a-z0-9]/gi,"_")+".ics", "text/calendar"); toast("&#11015; .ics saved"); }
@@ -180,9 +167,9 @@ END:VCALENDAR`;
     events = data.events || [];
     const wb = document.getElementById("warningBanner");
     if (data.failed_groups && data.failed_groups.length) {
-      wb.style.display = "block"; wb.textContent = `⚠ Couldn't reach: ${data.failed_groups.join(", ")}. Showing available groups.`;
+      wb.style.display = "block"; wb.textContent = `\u26a0 Couldn't reach: ${data.failed_groups.join(", ")}. Showing available groups.`;
     } else wb.style.display = "none";
-    setStatus(`Live — ${data.event_count} events synced`, "ok");
+    setStatus(`Live \u2014 ${data.event_count} events synced`, "ok");
     document.getElementById("lastSync").textContent = "Last synced: " + new Date(data.generated_at).toLocaleString();
     render();
   }
@@ -195,10 +182,10 @@ END:VCALENDAR`;
     try {
       const res = await fetch(API + endpoint);
       if (!res.ok) throw new Error();
-      applyData(await res.json()); toast(`✅ Events loaded`);
+      applyData(await res.json()); toast("\u2705 Events loaded");
     } catch {
-      setStatus("Sync failed", "warn"); toast("Sync failed", true);
-      document.getElementById("contentArea").innerHTML = '<div class="error">&#9888; Could not load events. Click Refresh Now to retry.</div>';
+      setStatus("Sync failed", "warn"); toast("Sync failed — try Refresh", true);
+      document.getElementById("contentArea").innerHTML = '<div class="error">&#9888; Could not load events. Tap Refresh Now to retry.</div>';
     }
     btn.disabled = false; btn.innerHTML = "&#128260; Refresh Now"; syncing = false;
   }
@@ -213,17 +200,8 @@ END:VCALENDAR`;
 
   document.getElementById("syncAllBtn").addEventListener("click", () => {
     if (!events.length) { toast("No events loaded", true); return; }
-    let cal = "BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//LeedsSync//EN
-";
-    events.forEach(ev => { cal += `BEGIN:VEVENT
-UID:${ev.id}
-SUMMARY:${ev.title}
-URL:${ev.url}
-LOCATION:${ev.location||""}
-END:VEVENT
-`; });
+    let cal = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//LeedsSync//EN\n";
+    events.forEach(ev => { cal += `BEGIN:VEVENT\nUID:${ev.id}\nSUMMARY:${ev.title}\nURL:${ev.url}\nLOCATION:${ev.location||""}\nEND:VEVENT\n`; });
     blobDl(cal+"END:VCALENDAR", "leeds_all_events.ics", "text/calendar");
     toast(`&#128197; ${events.length} events bundled`);
   });
@@ -231,8 +209,7 @@ END:VEVENT
   document.getElementById("exportCsvBtn").addEventListener("click", () => {
     if (!events.length) { toast("No events", true); return; }
     const rows = [["Title","Date","Group","Location","Link"], ...events.map(e => [e.title, fmt(e.start), e.group, e.location, e.url])];
-    blobDl(rows.map(r => r.map(v => `"${(v||"").toString().replace(/"/g,'""')}"`).join(",")).join("
-"), "leeds_events.csv", "text/csv");
+    blobDl(rows.map(r => r.map(v => `"${(v||"").toString().replace(/"/g,'""')}"`).join(",")).join("\n"), "leeds_events.csv", "text/csv");
     toast("&#11015; CSV exported");
   });
 

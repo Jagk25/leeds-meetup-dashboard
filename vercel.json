@@ -3,11 +3,5 @@
     { "source": "/api/sync", "destination": "/api/sync" },
     { "source": "/api/events", "destination": "/api/events" },
     { "source": "/(.*)", "destination": "/public/index.html" }
-  ],
-  "functions": {
-    "api/*.py": {
-      "runtime": "python3.12",
-      "maxDuration": 30
-    }
-  }
+  ]
 }
