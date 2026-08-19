@@ -1,7 +1,7 @@
- {
+{
  "rewrites": [
-      { "source": "/", "destination": "/index.html" },
-      { "source": "/api/sync", "destination": "/api/sync" },
-      { "source": "/api/events", "destination": "/api/events" }
-    ]
- }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/api/sync", "destination": "/api/sync" },
+    { "source": "/api/events", "destination": "/api/events" }
+  ]
+}
